@@ -2,6 +2,9 @@
 // IDE used: Visual Studio Code
 
 #include <iostream>
+#include <vector>
+#include <iomanip>
+#include <fstream>
 #include <string>
 
 using namespace std;
@@ -12,7 +15,6 @@ struct ReviewNode {
     string comment;
     ReviewNode * next;
 };
-
 
 // Movie class
 class Movie{
@@ -25,34 +27,50 @@ public:
 
     // Destructor to free up memory
     ~Movie(){
-        while (reviewHead != nullptr) {
-            ReviewNode* temp = reviewHead;
-            reviewHead = reviewHead->next;
+        while(review != nullptr){
+            ReviewNode * temp = review;
+            review = review->next;
             delete temp;
         }
     }
 
     // Function prototypes
-    void addReview();
+    void addReview(double, string&);
     void displayReviews();
-}
+};
+
 // Function prototypes
 double generateRandomRating();
 void loadComments();
 void displayAllMovies();
-void shuffleandAssignReviews();
+void shuffleandAssignComments();
 
 int main(){
-    ReviewNode * head = nullptr;
-    
-    // Generate random number
+    // Read comments from file
+    vector<string> reviewComments;
+    loadComments("reviews.txt", reviewComments);
+
+    // Container of movies
+    vector<Movie> movies = {
+        Movie("Indiana Jones: The Dial of Destiny"),
+        Movie("Avengers: Endgame"),
+        Movie("Spiderman: No Way Home"),
+        Movie("Oppenheimer")
+    };
+
+    // Shuffle and assign comments to each movie
+    shuffleandAssignComments(movies, reviewComments);
+
+    // Display all movies with their reviews
+    displayAllMovies(movies);
+
+    return 0;   
 
     return 0;
 }
 
 // Function definitions
-
-void Movie::addReview(double rating, string comment){
+void Movie::addReview(double rating, string& comment){
     ReviewNode * newNode= new ReviewNode;
     review = newNode;
 }
@@ -100,6 +118,9 @@ void displayAllMovies(vector<Movie> movies){
     for (Movie& movie : movies){
         movie.displayReviews();
     }
+}
+void shuffleandAssignComments(vector<Movie> movies, vector<string> comments){
+    vector<string> shuffledComments = comments;
     for (Movie& movie : movies){
         random_shuffle(shuffledComments.begin(), shuffledComments.end()); // Shuffle comments
         for(int i = 0; i < 3; ++i){
@@ -107,8 +128,4 @@ void displayAllMovies(vector<Movie> movies){
             movie.addReview(rating, shuffledComments[i]);
         }
     }
-}
-void shuffleandAssignReviews(vector<Movie> movies, vector<string> comments){
-    vector<string> shuffledComments = comments;
-
 }
