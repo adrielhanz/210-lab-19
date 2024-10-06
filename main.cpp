@@ -6,7 +6,6 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
-#include <random>
 
 using namespace std;
 
@@ -24,7 +23,7 @@ private:
     ReviewNode * review;
 public:
     // Constructor
-    Movie(string movieTitle) : title(movieTitle), review(nullptr){}
+    Movie(const string movieTitle) : title(movieTitle), review(nullptr){}
 
     // Destructor to free up memory
     ~Movie(){
@@ -36,14 +35,19 @@ public:
     }
 
     // Function prototypes
-    void addReview(double, string&);
-    void displayReviews();
+    void addReview(double rating, const string& comment);
+    void displayReviews() const;
+
+    string getTitle(){
+        return title;
+    }
 };
 
 // Function prototypes
 double generateRandomRating();
-void loadComments(string& filename, vector<string>& comments);
-void displayAllMovies(vector<Movie>& movies);
+void loadComments(const string& filename, vector<string>& comments);
+void displayAllMovies(const vector<Movie>& movies);
+void assignReviews(vector<Movie>& movies, const vector<string>& comments);
 
 int main(){
     // Read comments from file
@@ -57,7 +61,8 @@ int main(){
     movies.push_back(Movie("Spiderman: No Way Home"));
     movies.push_back(Movie("Oppenheimer"));
 
-    // Display all movies with their reviews
+    assignReviews(movies, reviewComments);
+
     displayAllMovies(movies);
 
     return 0;
@@ -111,5 +116,19 @@ void loadComments(string& filename, vector<string>& comments){
 void displayAllMovies(vector<Movie>& movies){
     for (Movie& movie : movies){
         movie.displayReviews();
+    }
+}
+
+void assignReviews(vector<Movie>& movies, const vector<string>& comments){
+    size_t numComments = comments.size();
+
+    // For each movie, assign 3 comments in order from the loaded comments
+    for (Movie& movie : movies) {
+        for (int i = 0; i < 3; ++i) {
+            if (i < numComments) { // Ensure we don't go out of bounds
+                double rating = generateRandomRating();
+                movie.addReview(rating, comments[i]); // Directly use comments without shuffling
+            }
+        }
     }
 }
