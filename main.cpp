@@ -60,21 +60,23 @@ int main(){
     movies.push_back(Movie("Avengers: Endgame"));
     movies.push_back(Movie("Spiderman: No Way Home"));
     movies.push_back(Movie("Oppenheimer"));
-
+    
     assignReviews(movies, reviewComments);
-
     displayAllMovies(movies);
 
     return 0;
 }
 
 // Function definitions
-void Movie::addReview(double rating, string& comment){
-    ReviewNode * newNode= new ReviewNode;
+void Movie::addReview(double rating, const string& comment){
+    ReviewNode * newNode = new ReviewNode;
+    newNode->rating = rating;        
+    newNode->comment = comment;       
+    newNode->next = review; 
     review = newNode;
 }
 
-void Movie::displayReviews(){
+void Movie::displayReviews() const{
     ReviewNode * temp = review;
     int count = 0;
     double totalRating = 0.0;
@@ -95,10 +97,10 @@ void Movie::displayReviews(){
 }
 
 double generateRandomRating(){
-    return static_cast<double>(10 + rand() % 41) / 10.0;
+    return static_cast<double>(rand() % 41 + 10) / 10.0;
 }
 
-void loadComments(string& filename, vector<string>& comments){
+void loadComments(const string& filename, vector<string>& comments){
     ifstream inputFile(filename);
     if (!inputFile) {
         cerr << "Error opening file: " << filename << endl;
@@ -113,8 +115,8 @@ void loadComments(string& filename, vector<string>& comments){
     inputFile.close();
 }
 
-void displayAllMovies(vector<Movie>& movies){
-    for (Movie& movie : movies){
+void displayAllMovies(const vector<Movie>& movies){
+    for (const Movie& movie : movies) {
         movie.displayReviews();
     }
 }
@@ -122,12 +124,12 @@ void displayAllMovies(vector<Movie>& movies){
 void assignReviews(vector<Movie>& movies, const vector<string>& comments){
     size_t numComments = comments.size();
 
-    // For each movie, assign 3 comments in order from the loaded comments
+    // For each movie, assign 3 comments
     for (Movie& movie : movies) {
         for (int i = 0; i < 3; ++i) {
-            if (i < numComments) { // Ensure we don't go out of bounds
+            if (i < numComments) { 
                 double rating = generateRandomRating();
-                movie.addReview(rating, comments[i]); // Directly use comments without shuffling
+                movie.addReview(rating, comments[i]);
             }
         }
     }
