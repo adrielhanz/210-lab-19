@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <random>
 
 using namespace std;
 
@@ -41,9 +42,8 @@ public:
 
 // Function prototypes
 double generateRandomRating();
-void loadComments(string filename, vector<string> comments);
-void displayAllMovies(vector<Movie> movies);
-void shuffleandAssignComments(vector<Movie> movies, vector<string> comments);
+void loadComments(string& filename, vector<string>& comments);
+void displayAllMovies(vector<Movie>& movies);
 
 int main(){
     // Read comments from file
@@ -56,9 +56,6 @@ int main(){
     movies.push_back(Movie("Avengers: Endgame"));
     movies.push_back(Movie("Spiderman: No Way Home"));
     movies.push_back(Movie("Oppenheimer"));
-
-    // Shuffle and assign comments to each movie
-    shuffleandAssignComments(movies, reviewComments);
 
     // Display all movies with their reviews
     displayAllMovies(movies);
@@ -96,12 +93,12 @@ double generateRandomRating(){
     return static_cast<double>(10 + rand() % 41) / 10.0;
 }
 
-void loadComments(string filename, vector<string> comments){
+void loadComments(string& filename, vector<string>& comments){
     ifstream inputFile(filename);
-    if(!inputFile){
-        cout << "Error opening file.";
+    if (!inputFile) {
+        cerr << "Error opening file: " << filename << endl;
+        exit(1);
     }
-    exit;
 
     string comment;
     while(getline(inputFile, comment)){
@@ -111,18 +108,8 @@ void loadComments(string filename, vector<string> comments){
     inputFile.close();
 }
 
-void displayAllMovies(vector<Movie> movies){
+void displayAllMovies(vector<Movie>& movies){
     for (Movie& movie : movies){
         movie.displayReviews();
-    }
-}
-void shuffleandAssignComments(vector<Movie> movies, vector<string> comments){
-    vector<string> shuffledComments = comments;
-    for (Movie& movie : movies){
-        random_shuffle(shuffledComments.begin(), shuffledComments.end()); // Shuffle comments
-        for(int i = 0; i < 3; ++i){
-            double rating = generateRandomRating();
-            movie.addReview(rating, shuffledComments[i]);
-        }
     }
 }
