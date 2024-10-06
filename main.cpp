@@ -41,9 +41,9 @@ public:
 
 // Function prototypes
 double generateRandomRating();
-void loadComments();
-void displayAllMovies();
-void shuffleandAssignComments();
+void loadComments(string filename, vector<string> comments);
+void displayAllMovies(vector<Movie> movies);
+void shuffleandAssignComments(vector<Movie> movies, vector<string> comments);
 
 int main(){
     // Read comments from file
@@ -51,20 +51,17 @@ int main(){
     loadComments("reviews.txt", reviewComments);
 
     // Container of movies
-    vector<Movie> movies = {
-        Movie("Indiana Jones: The Dial of Destiny"),
-        Movie("Avengers: Endgame"),
-        Movie("Spiderman: No Way Home"),
-        Movie("Oppenheimer")
-    };
+    vector<Movie> movies;
+    movies.push_back(Movie("Indiana Jones: The Dial of Destiny"));
+    movies.push_back(Movie("Avengers: Endgame"));
+    movies.push_back(Movie("Spiderman: No Way Home"));
+    movies.push_back(Movie("Oppenheimer"));
 
     // Shuffle and assign comments to each movie
     shuffleandAssignComments(movies, reviewComments);
 
     // Display all movies with their reviews
     displayAllMovies(movies);
-
-    return 0;   
 
     return 0;
 }
