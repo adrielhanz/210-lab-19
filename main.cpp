@@ -1,4 +1,4 @@
-// COMSC-210 | Lab 18 | Adriel Chandra
+// COMSC-210 | Lab 19 | Adriel Chandra
 // IDE used: Visual Studio Code
 
 #include <iostream>
@@ -60,7 +60,7 @@ int main(){
     movies.push_back(Movie("Avengers: Endgame"));
     movies.push_back(Movie("Spiderman: No Way Home"));
     movies.push_back(Movie("Oppenheimer"));
-    
+
     assignReviews(movies, reviewComments);
     displayAllMovies(movies);
 
