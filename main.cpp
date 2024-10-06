@@ -44,49 +44,8 @@ void shuffleandAssignReviews();
 
 int main(){
     ReviewNode * head = nullptr;
-    int choice;
-    char anotherReview;
-
-    cout << "Which linked list method should we use?\n";
-    cout << "    [1] New nodes are added at the head of the linked list\n";
-    cout << "    [2] New nodes are added at the tail of the linked list\n";
-
-    // Input validation for choice
-    while (true) {
-        cout << "Choice: ";
-        cin >> choice;
-
-        if (choice == 1 || choice == 2){
-            break; // Valid choice, exit loop
-        } else{
-            cout << "Invalid choice. Please enter 1 or 2." << endl;
-        }
-    }
     
-    // Enter a loop until user enters anything other than Y
-    do{
-        float rating;
-        string comment;
-
-        cout << "Enter review rating 0-5: ";
-        cin >> rating;
-        cin.ignore();
-
-        cout << "Enter review comments: ";
-        getline(cin, comment);
-
-        if (choice == 1){
-            addToHead(head, rating, comment);
-        } else {
-            addToTail(head, rating, comment);
-        }
-
-        cout << "Enter another review? Y/N: ";
-        cin >> anotherReview;
-    } while (anotherReview == 'Y' || anotherReview == 'y');
-
-    cout << "\nOutputting all reviews:\n";
-    displayReviews(head);
+    // Generate random number
 
     return 0;
 }
@@ -104,11 +63,52 @@ void Movie::displayReviews(){
     double totalRating = 0.0;
 
     cout << "Movie name: " << title << endl;
+    while(temp != nullptr){
+        count++;
+        cout << fixed << setprecision(1);
+        cout << "> Review #" << count << ": " << temp->rating << ": " << temp->comment << endl;
+        totalRating += temp->rating;
+        temp = temp->next;
+    }
+
+    if (count > 0) {
+        double average = totalRating / count;
+        cout << "> Average Rating: " << average << endl;
+    }
 }
-void addReview(ReviewNode *& head, float rating, string& comment){
-    ReviewNode * newNode= new ReviewNode;
-    newNode->rating = rating;
-    newNode->comment = comment;
-    newNode->next = head;
-    head = newNode;
+
+double generateRandomRating(){
+    return static_cast<double>(10 + rand() % 41) / 10.0;
+}
+
+void loadComments(string filename, vector<string> comments){
+    ifstream inputFile(filename);
+    if(!inputFile){
+        cout << "Error opening file.";
+    }
+    exit;
+
+    string comment;
+    while(getline(inputFile, comment)){
+        comments.push_back(comment);
+    }
+
+    inputFile.close();
+}
+
+void displayAllMovies(vector<Movie> movies){
+    for (Movie& movie : movies){
+        movie.displayReviews();
+    }
+    for (Movie& movie : movies){
+        random_shuffle(shuffledComments.begin(), shuffledComments.end()); // Shuffle comments
+        for(int i = 0; i < 3; ++i){
+            double rating = generateRandomRating();
+            movie.addReview(rating, shuffledComments[i]);
+        }
+    }
+}
+void shuffleandAssignReviews(vector<Movie> movies, vector<string> comments){
+    vector<string> shuffledComments = comments;
+
 }
