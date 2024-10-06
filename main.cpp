@@ -13,10 +13,34 @@ struct ReviewNode {
     ReviewNode * next;
 };
 
+
+// Movie class
+class Movie{
+private:
+    string title;
+    ReviewNode * review;
+public:
+    // Constructor
+    Movie(string movieTitle) : title(movieTitle), review(nullptr){}
+
+    // Destructor to free up memory
+    ~Movie(){
+        while (reviewHead != nullptr) {
+            ReviewNode* temp = reviewHead;
+            reviewHead = reviewHead->next;
+            delete temp;
+        }
+    }
+
+    // Function prototypes
+    void addReview();
+    void displayReviews();
+}
 // Function prototypes
-void addToHead(ReviewNode *&, float, string&);
-void addToTail(ReviewNode *&, float, string&);
-void displayReviews(ReviewNode *);
+double generateRandomRating();
+void loadComments();
+void displayAllMovies();
+void shuffleandAssignReviews();
 
 int main(){
     ReviewNode * head = nullptr;
@@ -68,47 +92,23 @@ int main(){
 }
 
 // Function definitions
-void addToHead(ReviewNode *& head, float rating, string& comment){
+
+void Movie::addReview(double rating, string comment){
+    ReviewNode * newNode= new ReviewNode;
+    review = newNode;
+}
+
+void Movie::displayReviews(){
+    ReviewNode * temp = review;
+    int count = 0;
+    double totalRating = 0.0;
+
+    cout << "Movie name: " << title << endl;
+}
+void addReview(ReviewNode *& head, float rating, string& comment){
     ReviewNode * newNode= new ReviewNode;
     newNode->rating = rating;
     newNode->comment = comment;
     newNode->next = head;
     head = newNode;
-}
-
-void addToTail(ReviewNode *& head, float rating, string& comment){
-    ReviewNode * newNode= new ReviewNode;
-    newNode->rating = rating;
-    newNode->comment = comment;
-    newNode->next = nullptr;
-
-    if (head == nullptr){
-        head = newNode;
-    } else{
-        ReviewNode * temp = head;
-        while (temp->next != nullptr){
-            temp = temp->next;
-        }
-        temp->next = newNode;
-    }
-}
-
-void displayReviews(ReviewNode * head){
-    ReviewNode* temp = head;
-    int count = 0;
-    float totalRating = 0.0;
-
-    while (temp != nullptr){
-        count++;
-        cout << "> Review #" << count << ": " << temp->rating << ": " << temp->comment << endl;
-        totalRating += temp->rating;
-        temp = temp->next;
-    }
-
-    if (count > 0){
-        float average = totalRating / count;
-        cout << "> Average: " << average << endl;
-    } else{
-        cout << "No reviews to display." << endl;
-    }
 }
