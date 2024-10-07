@@ -22,25 +22,16 @@ private:
     string title;
     ReviewNode * review;
 public:
-    // Constructor
-    Movie(const string movieTitle) : title(movieTitle), review(nullptr){}
+    Movie() : review(nullptr) {}
 
-    // Destructor to free up memory
-    ~Movie(){
-        while(review != nullptr){
-            ReviewNode * temp = review;
-            review = review->next;
-            delete temp;
-        }
-    }
+    // Setters and getters
+    void setTitle(const string &movieTitle); 
+    string getTitle() const;             
 
     // Function prototypes
     void addReview(double rating, const string& comment);
     void displayReviews() const;
-
-    string getTitle(){
-        return title;
-    }
+    void clearReviews();
 };
 
 // Function prototypes
@@ -55,14 +46,20 @@ int main(){
     loadComments("reviews.txt", reviewComments);
 
     // Container of movies
-    vector<Movie> movies;
-    movies.push_back(Movie("Indiana Jones: The Dial of Destiny"));
-    movies.push_back(Movie("Avengers: Endgame"));
-    movies.push_back(Movie("Spiderman: No Way Home"));
-    movies.push_back(Movie("Oppenheimer"));
+    vector<Movie> movies(4);
+
+    // Set movie titles using the setter
+    movies[0].setTitle("Indiana Jones: The Dial of Destiny");
+    movies[1].setTitle("Avengers: Endgame");
+    movies[2].setTitle("Spiderman: No Way Home");
+    movies[3].setTitle("Oppenheimer");
 
     assignReviews(movies, reviewComments);
     displayAllMovies(movies);
+
+    for (Movie &movie : movies) {
+        movie.clearReviews();
+    }
 
     return 0;
 }
@@ -96,6 +93,22 @@ void Movie::displayReviews() const{
     }
 }
 
+void Movie::setTitle(const string &movieTitle) {
+    title = movieTitle;
+}
+
+string Movie::getTitle() const {
+    return title;
+}
+
+void Movie::clearReviews() {
+    while(review != nullptr){
+        ReviewNode * temp = review;
+        review = review->next;
+        delete temp;
+    }
+}
+
 double generateRandomRating(){
     return static_cast<double>(rand() % 41 + 10) / 10.0;
 }
@@ -123,13 +136,21 @@ void displayAllMovies(const vector<Movie>& movies){
 
 void assignReviews(vector<Movie>& movies, const vector<string>& comments){
     size_t numComments = comments.size();
+    size_t commentIndex = 0;
 
     // For each movie, assign 3 comments
     for (Movie& movie : movies) {
         for (int i = 0; i < 3; ++i) {
-            if (i < numComments) { 
+            if (commentIndex < numComments) {
                 double rating = generateRandomRating();
-                movie.addReview(rating, comments[i]);
+                movie.addReview(rating, comments[commentIndex]);
+                commentIndex++;
+            } else {
+                // Restart if we've reached the end
+                commentIndex = 0;
+                double rating = generateRandomRating();
+                movie.addReview(rating, comments[commentIndex]);
+                commentIndex++;
             }
         }
     }
